@@ -1,0 +1,3 @@
+Dataset files that are used to train the model got from the https://www.kaggle.com/datasets/cicdataset/cicids2017, and if you need to use updated version of this dataset you can it aslo download using this link.
+github limit the data size to 25mb therefore here no any dataset uploaded to this repositary.
+change the data set name as you want and use it or replace the dataset where inside the code.
