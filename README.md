@@ -1,0 +1,2 @@
+# Multi-Tiered-Hybrid-Intrusion-Detection-System-for-Internet-of-Vehicles
+A Multi-Tiered Hybrid Intrusion Detection System (IDS) for the Internet of Vehicles (IoV) is a security solution designed to protect the communication and data exchange within a connected vehicle network. The IoV refers to the interconnected network of vehicles, infrastructure, and other devices that enable advanced transportation systems.
