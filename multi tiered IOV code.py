@@ -19,11 +19,11 @@ df
 
 df.Label.value_counts()
 
-# Z-score normalization
+
 features = df.dtypes[df.dtypes != 'object'].index
 df[features] = df[features].apply(
     lambda x: (x - x.mean()) / (x.std()))
-# Fill empty values by 0
+
 df = df.fillna(0)
 
 labelencoder = LabelEncoder()
@@ -31,7 +31,7 @@ df.iloc[:, -1] = labelencoder.fit_transform(df.iloc[:, -1])
 
 df.Label.value_counts()
 
-# retain the minority class instances and sample the majority class instances
+
 df_minor = df[(df['Label']==6)|(df['Label']==1)|(df['Label']==4)]
 df_major = df.drop(df_minor.index)
 
@@ -39,7 +39,7 @@ X = df_major.drop(['Label'],axis=1)
 y = df_major.iloc[:, -1].values.reshape(-1,1)
 y=np.ravel(y)
 
-# use k-means to cluster the data samples and select a proportion of data from each cluster
+
 from sklearn.cluster import MiniBatchKMeans
 kmeans = MiniBatchKMeans(n_clusters=1000, random_state=0).fit(X)
 
@@ -70,10 +70,10 @@ result
 result = result.drop(['klabel'],axis=1)
 result = result.append(df_minor)
 
-result.to_csv('./data/CICIDS2017_sample_km.csv',index=0)
+result.to_csv('/CICIDS.csv',index=0)
 
-# Read the sampled dataset
-df=pd.read_csv('./data/CICIDS2017_sample_km.csv')
+
+df=pd.read_csv('/CICIDS.csv')
 
 X = df.drop(['Label'],axis=1).values
 y = df.iloc[:, -1].values.reshape(-1,1)
@@ -84,7 +84,7 @@ X_train, X_test, y_train, y_test = train_test_split(X,y, train_size = 0.8, test_
 from sklearn.feature_selection import mutual_info_classif
 importances = mutual_info_classif(X_train, y_train)
 
-# calculate the sum of importance scores
+
 f_list = sorted(zip(map(lambda x: round(x, 4), importances), features), reverse=True)
 Sum = 0
 fs = []
@@ -92,7 +92,7 @@ for i in range(0, len(f_list)):
     Sum = Sum + f_list[i][0]
     fs.append(f_list[i][1])
 
-# select the important features from top to bottom until the accumulated importance reaches 90%
+
 f_list2 = sorted(zip(map(lambda x: round(x, 4), importances/Sum), features), reverse=True)
 Sum2 = 0
 fs = []
@@ -108,7 +108,7 @@ X_fs.shape
 
 from FCBF_module import FCBF, FCBFK, FCBFiP, get_i
 fcbf = FCBFK(k = 20)
-#fcbf.fit(X_fs, y)
+
 
 X_fss = fcbf.fit_transform(X_fs,y)
 
@@ -212,10 +212,10 @@ plt.xlabel("y_pred")
 plt.ylabel("y_true")
 plt.show()
 
-# Hyperparameter optimization of random forest
+
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from sklearn.model_selection import cross_val_score, StratifiedKFold
-# Define the objective function
+
 def objective(params):
     params = {
         'n_estimators': int(params['n_estimators']), 
@@ -230,7 +230,7 @@ def objective(params):
     score=clf.score(X_test,y_test)
 
     return {'loss':-score, 'status': STATUS_OK }
-# Define the hyperparameter configuration space
+
 space = {
     'n_estimators': hp.quniform('n_estimators', 10, 200, 1),
     'max_depth': hp.quniform('max_depth', 5, 50, 1),
@@ -285,10 +285,10 @@ plt.xlabel("y_pred")
 plt.ylabel("y_true")
 plt.show()
 
-# Hyperparameter optimization of decision tree
+
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from sklearn.model_selection import cross_val_score, StratifiedKFold
-# Define the objective function
+
 def objective(params):
     params = {
         'max_depth': int(params['max_depth']),
@@ -302,7 +302,7 @@ def objective(params):
     score=clf.score(X_test,y_test)
 
     return {'loss':-score, 'status': STATUS_OK }
-# Define the hyperparameter configuration space
+
 space = {
     'max_depth': hp.quniform('max_depth', 5, 50, 1),
     "max_features":hp.quniform('max_features', 1, 20, 1),
@@ -356,10 +356,10 @@ plt.xlabel("y_pred")
 plt.ylabel("y_true")
 plt.show()
 
-# Hyperparameter optimization of extra trees
+
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from sklearn.model_selection import cross_val_score, StratifiedKFold
-# Define the objective function
+
 def objective(params):
     params = {
         'n_estimators': int(params['n_estimators']), 
@@ -374,7 +374,7 @@ def objective(params):
     score=clf.score(X_test,y_test)
 
     return {'loss':-score, 'status': STATUS_OK }
-# Define the hyperparameter configuration space
+
 space = {
     'n_estimators': hp.quniform('n_estimators', 10, 200, 1),
     'max_depth': hp.quniform('max_depth', 5, 50, 1),
@@ -496,20 +496,20 @@ plt.xlabel("y_pred")
 plt.ylabel("y_true")
 plt.show()
 
-df=pd.read_csv('./data/CICIDS2017_sample_km.csv')
+df=pd.read_csv('./data/CICIDS201.csv')
 
 df.Label.value_counts()
 
 df1 = df[df['Label'] != 5]
 df1['Label'][df1['Label'] > 0] = 1
-df1.to_csv('./data/CICIDS2017_sample_km_without_portscan.csv',index=0)
+df1.to_csv('/CICIDS.csv',index=0)
 
 df2 = df[df['Label'] == 5]
 df2['Label'][df2['Label'] == 5] = 1
-df2.to_csv('./data/CICIDS2017_sample_km_portscan.csv',index=0)
+df2.to_csv('/CICIDS22.csv',index=0)
 
-df1 = pd.read_csv('./data/CICIDS2017_sample_km_without_portscan.csv')
-df2 = pd.read_csv('./data/CICIDS2017_sample_km_portscan.csv')
+df1 = pd.read_csv('/CICIDS2017.csv')
+df2 = pd.read_csv('/CICIDS201711.csv')
 
 features = df1.drop(['Label'],axis=1).dtypes[df1.dtypes != 'object'].index
 df1[features] = df1[features].apply(
@@ -539,7 +539,7 @@ pd.Series(y).value_counts()
 from sklearn.feature_selection import mutual_info_classif
 importances = mutual_info_classif(X, y)
 
-# calculate the sum of importance scores
+
 f_list = sorted(zip(map(lambda x: round(x, 4), importances), features), reverse=True)
 Sum = 0
 fs = []
@@ -547,7 +547,7 @@ for i in range(0, len(f_list)):
     Sum = Sum + f_list[i][0]
     fs.append(f_list[i][1])
 
-# select the important features from top to bottom until the accumulated importance reaches 90%
+
 f_list2 = sorted(zip(map(lambda x: round(x, 4), importances/Sum), features), reverse=True)
 Sum2 = 0
 fs = []
@@ -637,7 +637,7 @@ def CL_kmeans(X_train, X_test, y_train, y_test,n,b=100):
 
 CL_kmeans(X_train, X_test, y_train, y_test, 8)
 
-#Hyperparameter optimization by BO-GP
+
 from skopt.space import Real, Integer
 from skopt.utils import use_named_args
 from sklearn import metrics
@@ -686,8 +686,6 @@ t2=time.time()
 print(t2-t1)
 print("Best score=%.4f" % (1-res_gp.fun))
 print("""Best parameters: n_clusters=%d""" % (res_gp.x[0]))
-
-#Hyperparameter optimization by BO-TPE
 from hyperopt import hp, fmin, tpe, STATUS_OK, Trials
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.cluster import MiniBatchKMeans
@@ -742,9 +740,8 @@ print("Random Forest: Hyperopt estimated optimum {}".format(best))
 
 CL_kmeans(X_train, X_test, y_train, y_test, 16)
 
-# needs to work on the entire dataset to generate sufficient training samples for biased classifiers
 def Anomaly_IDS(X_train, X_test, y_train, y_test,n,b=100):
-    # CL-kmeans
+    
     km_cluster = MiniBatchKMeans(n_clusters=n,batch_size=b)
     result = km_cluster.fit_predict(X_train)
     result2 = km_cluster.predict(X_test)
@@ -779,7 +776,7 @@ def Anomaly_IDS(X_train, X_test, y_train, y_test,n,b=100):
     print(str(acc))
     print(cm)
     
-    #Biased classifier construction
+    
     count=0
     print(len(y))
     a=np.zeros(n)
@@ -791,17 +788,17 @@ def Anomaly_IDS(X_train, X_test, y_train, y_test,n,b=100):
         bl=[]
         for i in range(0,len(y)):   
             if result[i]==v:        
-                if y[i]==1:        #label 1
+                if y[i]==1:     
                     a[v]=a[v]+1
                     al.append(i)
-                else:             #label 0
+                else:             
                     b[v]=b[v]+1
                     bl.append(i)
         if a[v]<=b[v]:
             FNL.extend(al)
         else:
             FPL.extend(bl)
-        #print(str(v)+"="+str(a[v]/(a[v]+b[v])))
+        
         
     dffp=df.iloc[FPL, :]
     dffn=df.iloc[FNL, :]
