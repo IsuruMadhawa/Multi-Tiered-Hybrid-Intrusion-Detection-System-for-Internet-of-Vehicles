@@ -871,5 +871,18 @@ def Anomaly_IDS(X_train, X_test, y_train, y_test,n,b=100):
     cm=confusion_matrix(y2p,result2)
     print(cm)
 
+import pickle
+
+with open('xgboost_model.pkl', 'wb') as file:
+    pickle.dump(xg, file)
+
+with open('randomforest_model.pkl', 'wb') as file:
+    pickle.dump(rf, file)
+
+with open('decisiontree_model.pkl', 'wb') as file:
+    pickle.dump(dt, file)
+
+with open('extratrees_model.pkl', 'wb') as file:
+    pickle.dump(et, file)
 
 
