@@ -16,3 +16,5 @@ The multi-tiered hybrid IDS combines the strengths of each tier to provide a com
 The system can generate real-time alerts, trigger automated responses, or notify human operators for further investigation and mitigation actions. Additionally, the IDS can continuously update its knowledge base by incorporating new attack signatures, machine learning models, or system behavior profiles to adapt to emerging threats and evolving IoV environments.
 
 Overall, a Multi-Tiered Hybrid Intrusion Detection System for the Internet of Vehicles enhances the security posture of connected vehicles, mitigates risks, and ensures the safe and secure operation of the IoV ecosystem.
+ 
+***I here add the relavent python code for your reference. Here specially I need to mention those who create this code and I got it and make more secure and develop some new parts as for my project.***
